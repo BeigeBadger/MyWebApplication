@@ -36,7 +36,7 @@ namespace MyWebApplication
 
 		[Display(Name = "Created at")]
 		[DisplayFormat(DataFormatString = "{0:O}")]         // ISO 8601
-		public DateTime CreatedAt { get; set; }
+		public DateTime CreatedAt { get; private set; }
 
 		[Display(Name = "Deleted")]
 		public bool IsDeleted { get; private set; }
