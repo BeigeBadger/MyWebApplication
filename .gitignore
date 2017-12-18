@@ -1,1 +1,7 @@
 packages/
+MyWebApplication/obj/
+MyWebApplication.Tests/obj/
+MyWebApplication.Tests/bin/
+MyWebApplication/bin/
+MyWebApplication/MyWebApplication.Tests/obj/
+MyWebApplication/MyWebApplication/obj/
