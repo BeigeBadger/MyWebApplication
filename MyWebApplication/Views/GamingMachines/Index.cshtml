@@ -1,0 +1,16 @@
+﻿@model IEnumerable<GamingMachine>
+
+@{
+	ViewBag.Title = "Manage Page";
+}
+
+<div class="jumbotron">
+	<h1>Manage gaming machines</h1>
+	<p class="lead">Perform CRUD operations on gaming machines</p>
+</div>
+
+// TODO....
+
+@{
+	Html.RenderPartial("_GamingMachineList", Model);
+}

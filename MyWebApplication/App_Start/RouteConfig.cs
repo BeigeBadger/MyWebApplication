@@ -14,6 +14,14 @@ namespace MyWebApplication
 				url: "{controller}/{action}",
 				defaults: new { controller = "Home", action = "Index" }
 			);
+
+			routes.MapRoute(
+				name: "Gaming Machines",
+				url: "{controller}/{action}",
+				defaults: new { controller = "GamingMachines", action = "Index" }
+			);
+
+			// TODO: Add more routes for CRUD operations
 		}
 	}
 }

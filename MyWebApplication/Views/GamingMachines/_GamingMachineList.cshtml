@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MyWebApplication.GamingMachine>
+
+<p>
+	@Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.MachinePosition)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Name)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.SerialNumber)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.CreatedAt)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.IsDeleted)
+		</th>
+	</tr>
+
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(model => item.MachinePosition)
+				</td>
+				<td>
+					@Html.DisplayFor(model => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(model => item.SerialNumber)
+				</td>
+				<td>
+					@Html.DisplayFor(model => item.CreatedAt)
+				</td>
+				<td>
+					@Html.DisplayFor(model => item.IsDeleted)
+				</td>
+				<td>
+					@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+					@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+					@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
