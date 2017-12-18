@@ -23,7 +23,6 @@ namespace MyWebApplication
         /// <summary>
         /// range for this should be zero (default) to 1000 position
         /// </summary>        
-        int GamingMachinePostion { get; set; }
         string GameName { get; set; }
         DateTime CreateDate { get; set; }
         bool IsDeleted { get; set; }
@@ -32,6 +31,7 @@ namespace MyWebApplication
     class Result
     {
         int ResultCode { get; set; } = 0;
-        string ResultMessage { get; set; } = "Succes";
     }
+		public int MachinePosition { get; private set; } = 0;
+		private string ResultMessage { get; set; } = "Success";
 }
