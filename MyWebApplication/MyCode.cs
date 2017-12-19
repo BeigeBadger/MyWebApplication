@@ -1,23 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyWebApplication
 {
-	public interface IGamingMachine
-	{
-		List<GamingMachine> Get(int page = 0, int skip = 10, string filter = "");
-
-		GamingMachine Get(int gamingSerialNumber);
-
-		Result CreateGamingMachine(GamingMachine gamingMachine);
-
-		Result UpdateGamingMachine(GamingMachine gamingMachine);
-
-		Result DeleteGamingMachine(GamingMachine gamingMachine);
-	}
-
-	public class GamingMachine : IGamingMachine
+	public class GamingMachine
 	{
 		/// <summary>
 		/// unique number which will be used to identify a gaming machine
@@ -48,52 +34,6 @@ namespace MyWebApplication
 			Name = name;
 			CreatedAt = createdAt;
 			IsDeleted = isDeleted;
-		}
-
-		public Result CreateGamingMachine(GamingMachine gamingMachine)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Result DeleteGamingMachine(GamingMachine gamingMachine)
-		{
-			throw new NotImplementedException();
-		}
-
-		public List<GamingMachine> Get(int page = 0, int skip = 10, string filter = "")
-		{
-			throw new NotImplementedException();
-		}
-
-		public GamingMachine Get(int gamingSerialNumber)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Result UpdateGamingMachine(GamingMachine gamingMachine)
-		{
-			throw new NotImplementedException();
-		}
-	}
-
-	public class Result
-	{
-		// TODO: Make this an enum
-		private int ResultCode { get; set; } = 1;
-
-		private string ResultMessage { get; set; } = "Success";
-
-		/// <summary>
-		/// Default success constructor
-		/// </summary>
-		public Result()
-		{
-		}
-
-		public Result(int resultCode, string resultMessage)
-		{
-			ResultCode = resultCode;
-			ResultMessage = resultMessage;
 		}
 	}
 }

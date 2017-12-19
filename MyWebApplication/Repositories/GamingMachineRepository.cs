@@ -1,9 +1,23 @@
-﻿using System;
+﻿using MyWebApplication.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MyWebApplication.Repositories
 {
+	public interface IGamingMachine
+	{
+		List<GamingMachine> Get(int page = 0, int skip = 10, string filter = "");
+
+		GamingMachine Get(int gamingSerialNumber);
+
+		Result CreateGamingMachine(GamingMachine gamingMachine);
+
+		Result UpdateGamingMachine(GamingMachine gamingMachine);
+
+		Result DeleteGamingMachine(GamingMachine gamingMachine);
+	}
+
 	public interface IGamingMachineRepository
 	{
 		List<GamingMachine> GetDatabaseBackup();
@@ -44,11 +58,11 @@ namespace MyWebApplication.Repositories
 
 			// Machine exists
 			if (index != -1)
-				return new Result(0, $"A machine with the serial number '{gamingMachine.SerialNumber}' already exists, please enter a different serial number");
+				return new Result(ResultTypeEnum.Failure, $"A machine with the serial number '{gamingMachine.SerialNumber}' already exists, please enter a different serial number");
 
 			// Validate that the position is between 0 and 1000 inclusive
 			if (gamingMachine.MachinePosition < 0 || gamingMachine.MachinePosition > 1000)
-				return new Result(0, $"Parameter '{nameof(gamingMachine.MachinePosition)}' must be between 0 and 1000 inclusive");
+				return new Result(ResultTypeEnum.Failure, $"Parameter '{nameof(gamingMachine.MachinePosition)}' must be between 0 and 1000 inclusive");
 
 			PerformCreateOperation(gamingMachine);
 
@@ -65,7 +79,7 @@ namespace MyWebApplication.Repositories
 
 			// Machine doesn't exist
 			if (index == -1)
-				return new Result(0, $"A gaming machine with the serial number '{serialNumber}' could not be found");
+				return new Result(ResultTypeEnum.Failure, $"A gaming machine with the serial number '{serialNumber}' could not be found");
 
 			PerformUpdateOperation(gamingMachine, index);
 			// TODO: check what new result property values are
@@ -81,7 +95,7 @@ namespace MyWebApplication.Repositories
 
 			// Machine doesn't exist
 			if (index == -1)
-				return new Result(0, $"A gaming machine with the serial number '{serialNumber}' could not be found");
+				return new Result(ResultTypeEnum.Failure, $"A gaming machine with the serial number '{serialNumber}' could not be found");
 
 			PerformDeleteOperation(index);
 
