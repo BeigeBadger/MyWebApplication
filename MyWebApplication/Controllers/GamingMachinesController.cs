@@ -1,4 +1,5 @@
-﻿using PagedList;
+﻿using MyWebApplication.Repositories;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +9,21 @@ namespace MyWebApplication.Controllers
 {
 	public class GamingMachinesController : Controller
 	{
-		// TODO: Hide these behind a repository
-		private static List<GamingMachine> _gamingMachinesDatabase = new List<GamingMachine>();
-
 		private static List<GamingMachine> _gamingMachines = new List<GamingMachine>();
+
+		private readonly IGamingMachineRepository GamingMachineRepository;
 
 		private const int PageSize = 10;
 		private const int MaxPositionNumber = 1000;
 
-		public GamingMachinesController()
+		public GamingMachinesController(IGamingMachineRepository gamingMachineRepository)
 		{
-			if (!_gamingMachinesDatabase.Any())
-				PopulateGamingMachines();
+			GamingMachineRepository = gamingMachineRepository;
+
+			if (!_gamingMachines.Any())
+			{
+				RestoreDatabaseBackup();
+			}
 		}
 
 		// GET: GamingMachines
@@ -63,20 +67,6 @@ namespace MyWebApplication.Controllers
 		// TODO: Update gaming machine (PATCH)
 
 		// TODO: Delete gaming machine (DELETE)
-
-		private void PopulateGamingMachines()
-		{
-			for (int i = 0; i <= 1000; i++)
-			{
-				bool deleted = i % 9 == 0;
-
-				GamingMachine gamingMachine = new GamingMachine(i, i, $"Game{i}", DateTime.Now, deleted);
-
-				_gamingMachinesDatabase.Add(gamingMachine);
-			}
-
-			RestoreDatabaseBackup();
-		}
 
 		private void SortItems(string sortBy)
 		{
@@ -134,7 +124,7 @@ namespace MyWebApplication.Controllers
 		private void RestoreDatabaseBackup()
 		{
 			_gamingMachines.Clear();
-			_gamingMachines.AddRange(_gamingMachinesDatabase);
+			_gamingMachines.AddRange(GamingMachineRepository.GetDatabaseBackup());
 		}
 	}
 }
