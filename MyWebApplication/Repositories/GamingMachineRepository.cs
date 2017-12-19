@@ -9,7 +9,7 @@ namespace MyWebApplication.Repositories
 		List<GamingMachine> GetDatabaseBackup();
 	}
 
-	public class GamingMachineRepository : IGamingMachineRepository
+	public class GamingMachineRepository : IGamingMachineRepository, IGamingMachine
 	{
 		private static List<GamingMachine> GamingMachineDatabase = new List<GamingMachine>();
 
@@ -17,6 +17,105 @@ namespace MyWebApplication.Repositories
 		{
 			if (!GamingMachineDatabase.Any())
 				PopulateGamingMachinesDatabase();
+		}
+
+		public List<GamingMachine> GetDatabaseBackup()
+		{
+			return GamingMachineDatabase;
+		}
+
+		public List<GamingMachine> Get(int page = 0, int skip = 10, string filter = "")
+		{
+			throw new NotImplementedException();
+		}
+
+		public GamingMachine Get(int gamingSerialNumber)
+		{
+			// TODO: long to int parsing issue here
+			GamingMachine gamingMachine = GamingMachineDatabase.SingleOrDefault(g => g.SerialNumber == gamingSerialNumber);
+
+			return gamingMachine;
+		}
+
+		public Result CreateGamingMachine(GamingMachine gamingMachine)
+		{
+			// Validate that the serial does not exist
+			int index = GetIndexOfExistingMachine(gamingMachine.SerialNumber);
+
+			// Machine exists
+			if (index != -1)
+				return new Result(0, $"A machine with the serial number '{gamingMachine.SerialNumber}' already exists, please enter a different serial number");
+
+			// Validate that the position is between 0 and 1000 inclusive
+			if (gamingMachine.MachinePosition < 0 || gamingMachine.MachinePosition > 1000)
+				return new Result(0, $"Parameter '{nameof(gamingMachine.MachinePosition)}' must be between 0 and 1000 inclusive");
+
+			PerformCreateOperation(gamingMachine);
+
+			// TODO: check what new result property values are
+			var x = new Result();
+
+			return new Result();
+		}
+
+		public Result UpdateGamingMachine(GamingMachine gamingMachine)
+		{
+			long serialNumber = gamingMachine.SerialNumber;
+			int index = GetIndexOfExistingMachine(serialNumber);
+
+			// Machine doesn't exist
+			if (index == -1)
+				return new Result(0, $"A gaming machine with the serial number '{serialNumber}' could not be found");
+
+			PerformUpdateOperation(gamingMachine, index);
+			// TODO: check what new result property values are
+			var x = new Result();
+
+			return new Result();
+		}
+
+		public Result DeleteGamingMachine(GamingMachine gamingMachine)
+		{
+			long serialNumber = gamingMachine.SerialNumber;
+			int index = GetIndexOfExistingMachine(serialNumber);
+
+			// Machine doesn't exist
+			if (index == -1)
+				return new Result(0, $"A gaming machine with the serial number '{serialNumber}' could not be found");
+
+			PerformDeleteOperation(index);
+
+			// TODO: check what new result property values are
+			var x = new Result();
+
+			return new Result();
+		}
+
+		#region Private
+
+		private void PerformDeleteOperation(int index)
+		{
+			GamingMachineDatabase.RemoveAt(index);
+		}
+
+		private void PerformUpdateOperation(GamingMachine gamingMachine, int index)
+		{
+			PerformDeleteOperation(index);
+			PerformCreateOperation(gamingMachine);
+		}
+
+		private void PerformCreateOperation(GamingMachine gamingMachine)
+		{
+			GamingMachineDatabase.Add(gamingMachine);
+		}
+
+		private int GetIndexOfExistingMachine(long serialNumber)
+		{
+			// Don't bother using our Get method as we could run into casting issues from long to int
+			// and we need to get the index of the element anyhow so this was means only searching once
+			int index = GamingMachineDatabase.FindIndex(g => g.SerialNumber == serialNumber);
+
+			return index;
 		}
 
 		private void PopulateGamingMachinesDatabase()
@@ -31,9 +130,6 @@ namespace MyWebApplication.Repositories
 			}
 		}
 
-		public List<GamingMachine> GetDatabaseBackup()
-		{
-			return GamingMachineDatabase;
-		}
+		#endregion Private
 	}
 }

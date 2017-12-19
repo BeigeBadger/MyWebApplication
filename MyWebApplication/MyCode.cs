@@ -78,7 +78,22 @@ namespace MyWebApplication
 
 	public class Result
 	{
-		private int ResultCode { get; set; } = 0;
+		// TODO: Make this an enum
+		private int ResultCode { get; set; } = 1;
+
 		private string ResultMessage { get; set; } = "Success";
+
+		/// <summary>
+		/// Default success constructor
+		/// </summary>
+		public Result()
+		{
+		}
+
+		public Result(int resultCode, string resultMessage)
+		{
+			ResultCode = resultCode;
+			ResultMessage = resultMessage;
+		}
 	}
 }
