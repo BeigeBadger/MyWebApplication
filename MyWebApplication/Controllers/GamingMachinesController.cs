@@ -1,4 +1,5 @@
-﻿using MyWebApplication.Repositories;
+﻿using MyWebApplication.Models;
+using MyWebApplication.Repositories;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -60,6 +61,44 @@ namespace MyWebApplication.Controllers
 			int pageNumber = (page ?? 1);
 
 			return View(_gamingMachines.ToPagedList(pageNumber, PageSize));
+		}
+
+		public ActionResult Create()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Create([Bind(Include = "SerialNumber, MachinePosition, Name")]GamingMachine gamingMachine)
+		{
+			//List<ModelError> modelStateErrors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+			string failureMessage = $"Model validation failed.";
+
+			if (ModelState.IsValid)
+			{
+				Result result = GamingMachineRepository.CreateGamingMachine(gamingMachine);
+
+				if (result.ResultCode == ResultTypeEnum.Success)
+				{
+					// Set success message
+					ViewBag.CreateResultMessage = $"Successfully created machine with name '{gamingMachine.Name}'.";
+					ViewBag.CreatedSucceeded = true;
+
+					// Update the list used by the view to include the new entry
+					RestoreDatabaseBackup();
+
+					return View(gamingMachine);
+				}
+
+				failureMessage = $"There was an error creating the machine: {result.ResultMessage}";
+			}
+
+			// Set failure message
+			ViewBag.CreateResultMessage = failureMessage;
+			ViewBag.CreatedSucceeded = false;
+
+			return View();
 		}
 
 		// TODO: Add gaming machine (POST)

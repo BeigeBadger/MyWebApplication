@@ -224,6 +224,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\GamingMachines\Index.cshtml" />
     <Content Include="Views\GamingMachines\_GamingMachineList.cshtml" />
+    <Content Include="Views\GamingMachines\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
