@@ -16,7 +16,7 @@ namespace MyWebApplication.Controllers
 		{
 			PopulateGamingMachines();
 
-			HandleSortOrder(sortBy);
+			SortItems(sortBy);
 
 			return View(_gamingMachines);
 		}
@@ -39,7 +39,7 @@ namespace MyWebApplication.Controllers
 			}
 		}
 
-		private void HandleSortOrder(string sortBy)
+		private void SortItems(string sortBy)
 		{
 			if (string.IsNullOrWhiteSpace(sortBy))
 				sortBy = "PositionAsc";
