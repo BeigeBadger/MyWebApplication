@@ -9,8 +9,36 @@
 	<p class="lead">Perform CRUD operations on gaming machines</p>
 </div>
 
-// TODO....
+<!--
+	Have the search form outside of the partial view for the GamingMachines
+	as we might want to use the partial view somewhere that searching
+	doesn't make sense
+-->
+@using (Html.BeginForm())
+{
+	<p>
+		Filter by name: @Html.TextBox("filterBy")
+		<input type="submit" value="Filter" id="btnSubmit" />
+		<input type="button" value="Clear" id="btnClear" />
+	</p>
+}
 
 @{
 	Html.RenderPartial("_GamingMachineList", Model);
+}
+
+<!--
+	Render inside the scripts place holder section that lives in _Layout.cshtml,
+	we do this so that our script is rendered/loaded AFTER we have included the
+	libraries and thus we don't get errors when trying to use their functionality
+-->
+@section scripts {
+	<script type="text/javascript">
+		$(function () {
+			$('#btnClear').on('click', function () {
+				$('input[name="filterBy"]').val("");
+				window.location = '@Url.Action("Index", "GamingMachines")'
+			});
+		});
+	</script>
 }

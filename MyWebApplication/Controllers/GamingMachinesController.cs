@@ -12,10 +12,12 @@ namespace MyWebApplication.Controllers
 		private List<GamingMachine> _gamingMachines = new List<GamingMachine>();
 
 		// GET: GamingMachines
-		public ActionResult Index(string sortBy)
+		public ActionResult Index(string sortBy, string filterBy)
 		{
 			PopulateGamingMachines();
 
+			// Do any filtering first as it will make sorting less expensive
+			FilterItems(filterBy);
 			SortItems(sortBy);
 
 			return View(_gamingMachines);
@@ -77,6 +79,15 @@ namespace MyWebApplication.Controllers
 				default:
 					throw new NotImplementedException($"The '{sortBy}' option for '{nameof(sortBy)}' parameter is not implemented!");
 			}
+		}
+
+		private void FilterItems(string filterBy)
+		{
+			// Exit early
+			if (string.IsNullOrWhiteSpace(filterBy))
+				return;
+
+			_gamingMachines = _gamingMachines.Where(g => g.Name.Contains(filterBy)).ToList();
 		}
 	}
 }
