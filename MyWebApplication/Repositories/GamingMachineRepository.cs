@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MyWebApplication.Repositories
 {
-	public interface IGamingMachine
+	public interface IGamingMachineRepository
 	{
 		List<GamingMachine> Get(int page = 0, int skip = 10, string filter = "");
 
@@ -16,14 +16,11 @@ namespace MyWebApplication.Repositories
 		Result UpdateGamingMachine(GamingMachine gamingMachine);
 
 		Result DeleteGamingMachine(GamingMachine gamingMachine);
-	}
 
-	public interface IGamingMachineRepository
-	{
 		List<GamingMachine> GetDatabaseBackup();
 	}
 
-	public class GamingMachineRepository : IGamingMachineRepository, IGamingMachine
+	public class GamingMachineRepository : IGamingMachineRepository
 	{
 		private static List<GamingMachine> GamingMachineDatabase = new List<GamingMachine>();
 
@@ -40,7 +37,13 @@ namespace MyWebApplication.Repositories
 
 		public List<GamingMachine> Get(int page = 0, int skip = 10, string filter = "")
 		{
-			throw new NotImplementedException();
+			// Implemented but not used because the paging is done on the controller side using and IPagedList
+			var machinesOnPage =
+				GamingMachineDatabase.Where(g => g.Name.Contains(filter))
+				.Skip(page * skip)
+				.Take(skip).ToList();
+
+			return machinesOnPage;
 		}
 
 		public GamingMachine Get(int gamingSerialNumber)
