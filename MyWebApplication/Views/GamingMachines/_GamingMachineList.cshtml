@@ -6,13 +6,13 @@
 <table class="table">
 	<tr>
 		<th>
-			@Html.DisplayNameFor(model => model.MachinePosition)
+			@Html.ActionLink("Position", "Index", new { sortOrder = ViewBag.PositionSortParam })
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.Name)
+			@Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParam })
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.SerialNumber)
+			@Html.ActionLink("Serial", "Index", new { sortOrder = ViewBag.SerialSortParam })
 		</th>
 		<th>
 			@Html.DisplayNameFor(model => model.CreatedAt)
