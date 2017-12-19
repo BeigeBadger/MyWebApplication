@@ -8,10 +8,19 @@ namespace MyWebApplication.Controllers
 {
 	public class GamingMachinesController : Controller
 	{
+		// TODO: Hide these behind a repository
+		private static List<GamingMachine> _gamingMachinesDatabase = new List<GamingMachine>();
+
+		private static List<GamingMachine> _gamingMachines = new List<GamingMachine>();
+
 		private const int PageSize = 10;
 		private const int MaxPositionNumber = 1000;
 
-		private List<GamingMachine> _gamingMachines = new List<GamingMachine>();
+		public GamingMachinesController()
+		{
+			if (!_gamingMachinesDatabase.Any())
+				PopulateGamingMachines();
+		}
 
 		// GET: GamingMachines
 		/// <summary>
@@ -21,9 +30,12 @@ namespace MyWebApplication.Controllers
 		/// <param name="currentFilter">A backup of the user's filter so that we can maintain it through paging</param>
 		/// <param name="page">The current page we are on</param>
 		/// <returns></returns>
-		public ActionResult Index(string sortBy, string filterBy, string currentFilter, int? page)
+		public ActionResult Index(string sortBy, string filterBy, string currentFilter, int? page, bool resetList = false)
 		{
-			PopulateGamingMachines();
+			if (resetList)
+			{
+				RestoreDatabaseBackup();
+			}
 
 			// Maintain filtering throughout paging
 			if (filterBy != null)
@@ -60,8 +72,10 @@ namespace MyWebApplication.Controllers
 
 				GamingMachine gamingMachine = new GamingMachine(i, i, $"Game{i}", DateTime.Now, deleted);
 
-				_gamingMachines.Add(gamingMachine);
+				_gamingMachinesDatabase.Add(gamingMachine);
 			}
+
+			RestoreDatabaseBackup();
 		}
 
 		private void SortItems(string sortBy)
@@ -115,6 +129,12 @@ namespace MyWebApplication.Controllers
 				return;
 
 			_gamingMachines = _gamingMachines.Where(g => g.Name.Contains(filterBy)).ToList();
+		}
+
+		private void RestoreDatabaseBackup()
+		{
+			_gamingMachines.Clear();
+			_gamingMachines.AddRange(_gamingMachinesDatabase);
 		}
 	}
 }

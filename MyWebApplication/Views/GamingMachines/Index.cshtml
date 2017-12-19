@@ -38,7 +38,7 @@
 			// Handle clearing the filter
 			$('#btnClear').on('click', function () {
 				$('input[name="filterBy"]').val("");
-				window.location = '@Url.Action("Index", "GamingMachines")'
+				window.location = '@Url.Action("Index", "GamingMachines", new { resetList = true })'
 			});
 		});
 	</script>
