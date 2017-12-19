@@ -123,6 +123,8 @@ namespace MyWebApplication.Repositories
 
 		private void PerformCreateOperation(GamingMachine gamingMachine)
 		{
+			gamingMachine.CreatedAt = DateTime.Now;
+
 			GamingMachineDatabase.Add(gamingMachine);
 		}
 
