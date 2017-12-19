@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -7,20 +8,42 @@ namespace MyWebApplication.Controllers
 {
 	public class GamingMachinesController : Controller
 	{
+		private const int PageSize = 10;
 		private const int MaxPositionNumber = 1000;
 
 		private List<GamingMachine> _gamingMachines = new List<GamingMachine>();
 
 		// GET: GamingMachines
-		public ActionResult Index(string sortBy, string filterBy)
+		/// <summary>
+		/// </summary>
+		/// <param name="sortBy">What column to sort on and whether we should sort by ASC or DESC</param>
+		/// <param name="filterBy">What the user would like to filter the results by aka search string</param>
+		/// <param name="currentFilter">A backup of the user's filter so that we can maintain it through paging</param>
+		/// <param name="page">The current page we are on</param>
+		/// <returns></returns>
+		public ActionResult Index(string sortBy, string filterBy, string currentFilter, int? page)
 		{
 			PopulateGamingMachines();
+
+			// Maintain filtering throughout paging
+			if (filterBy != null)
+			{
+				page = 1;
+			}
+			else
+			{
+				filterBy = currentFilter;
+			}
+
+			ViewBag.CurrentFilter = filterBy;
 
 			// Do any filtering first as it will make sorting less expensive
 			FilterItems(filterBy);
 			SortItems(sortBy);
 
-			return View(_gamingMachines);
+			int pageNumber = (page ?? 1);
+
+			return View(_gamingMachines.ToPagedList(pageNumber, PageSize));
 		}
 
 		// TODO: Add gaming machine (POST)
@@ -46,6 +69,10 @@ namespace MyWebApplication.Controllers
 			if (string.IsNullOrWhiteSpace(sortBy))
 				sortBy = "PositionAsc";
 
+			// Maintain sorting throughout paging
+			ViewBag.CurrentSort = sortBy;
+
+			// Check sorting
 			ViewBag.PositionSortParam = sortBy == "PositionAsc" ? "PositionDesc" : "PositionAsc";
 			ViewBag.NameSortParam = sortBy == "NameDesc" ? "NameAsc" : "NameDesc";
 			ViewBag.SerialSortParam = sortBy == "SerialDesc" ? "SerialAsc" : "SerialDesc";

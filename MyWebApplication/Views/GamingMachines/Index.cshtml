@@ -14,10 +14,10 @@
 	as we might want to use the partial view somewhere that searching
 	doesn't make sense
 -->
-@using (Html.BeginForm())
+@using (Html.BeginForm("Index", "GamingMachines", FormMethod.Get))
 {
 	<p>
-		Filter by name: @Html.TextBox("filterBy")
+		Filter by name: @Html.TextBox("filterBy", ViewBag.CurrentFilter as string)
 		<input type="submit" value="Filter" id="btnSubmit" />
 		<input type="button" value="Clear" id="btnClear" />
 	</p>
@@ -35,6 +35,7 @@
 @section scripts {
 	<script type="text/javascript">
 		$(function () {
+			// Handle clearing the filter
 			$('#btnClear').on('click', function () {
 				$('input[name="filterBy"]').val("");
 				window.location = '@Url.Action("Index", "GamingMachines")'
