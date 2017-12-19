@@ -2,9 +2,9 @@
 {
 	public class Result
 	{
-		private ResultTypeEnum ResultCode { get; set; } = ResultTypeEnum.Success;
+		public ResultTypeEnum ResultCode { get; private set; } = ResultTypeEnum.Success;
 
-		private string ResultMessage { get; set; } = "Success";
+		public string ResultMessage { get; private set; } = "Success";
 
 		/// <summary>
 		/// Default success constructor
