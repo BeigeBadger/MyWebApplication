@@ -12,11 +12,11 @@ namespace MyWebApplication.Controllers
 		private List<GamingMachine> _gamingMachines = new List<GamingMachine>();
 
 		// GET: GamingMachines
-		public ActionResult Index(string sortOrder)
+		public ActionResult Index(string sortBy)
 		{
 			PopulateGamingMachines();
 
-			HandleSortOrder(sortOrder);
+			HandleSortOrder(sortBy);
 
 			return View(_gamingMachines);
 		}
@@ -39,16 +39,16 @@ namespace MyWebApplication.Controllers
 			}
 		}
 
-		private void HandleSortOrder(string sortOrder)
+		private void HandleSortOrder(string sortBy)
 		{
-			if (string.IsNullOrWhiteSpace(sortOrder))
-				sortOrder = "PositionAsc";
+			if (string.IsNullOrWhiteSpace(sortBy))
+				sortBy = "PositionAsc";
 
-			ViewBag.PositionSortParam = sortOrder == "PositionAsc" ? "PositionDesc" : "PositionAsc";
-			ViewBag.NameSortParam = sortOrder == "NameDesc" ? "NameAsc" : "NameDesc";
-			ViewBag.SerialSortParam = sortOrder == "SerialDesc" ? "SerialAsc" : "SerialDesc";
+			ViewBag.PositionSortParam = sortBy == "PositionAsc" ? "PositionDesc" : "PositionAsc";
+			ViewBag.NameSortParam = sortBy == "NameDesc" ? "NameAsc" : "NameDesc";
+			ViewBag.SerialSortParam = sortBy == "SerialDesc" ? "SerialAsc" : "SerialDesc";
 
-			switch (sortOrder)
+			switch (sortBy)
 			{
 				case "PositionAsc":
 					_gamingMachines = _gamingMachines.OrderBy(g => g.MachinePosition).ToList();
@@ -75,7 +75,7 @@ namespace MyWebApplication.Controllers
 					break;
 
 				default:
-					throw new NotImplementedException($"The '{sortOrder}' option for '{nameof(sortOrder)}' parameter is not implemented!");
+					throw new NotImplementedException($"The '{sortBy}' option for '{nameof(sortBy)}' parameter is not implemented!");
 			}
 		}
 	}
