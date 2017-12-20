@@ -63,8 +63,15 @@ namespace MyWebApplication.Controllers
 			return View(_gamingMachines.ToPagedList(pageNumber, PageSize));
 		}
 
-		public ActionResult Create()
+		public ActionResult Create(string machineName)
 		{
+			if (!string.IsNullOrWhiteSpace(machineName))
+			{
+				// Set success message
+				ViewBag.CreateResultMessage = $"Successfully created machine with name '{machineName}'.";
+				ViewBag.CreatedSucceeded = true;
+			}
+
 			return View();
 		}
 
@@ -81,14 +88,11 @@ namespace MyWebApplication.Controllers
 
 				if (result.ResultCode == ResultTypeEnum.Success)
 				{
-					// Set success message
-					ViewBag.CreateResultMessage = $"Successfully created machine with name '{gamingMachine.Name}'.";
-					ViewBag.CreatedSucceeded = true;
-
 					// Update the list used by the view to include the new entry
 					RestoreDatabaseBackup();
 
-					return View(gamingMachine);
+					// Use PRG pattern to prevent resubmit on page refresh
+					return RedirectToAction("Create", new { machineName = gamingMachine.Name });
 				}
 
 				failureMessage = $"There was an error creating the machine: {result.ResultMessage}";
