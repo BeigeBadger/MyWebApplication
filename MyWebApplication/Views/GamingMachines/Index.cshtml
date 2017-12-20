@@ -10,10 +10,17 @@
 </div>
 
 <!--
-	Have the search form outside of the partial view for the GamingMachines
-	as we might want to use the partial view somewhere that searching
-	doesn't make sense
+	Have the search form and create new gaming machine links outside
+	of the partial view for the GamingMachines as we might want to
+	use the partial view somewhere that searching or creating a new
+	machine doesn't make sense
 -->
+<p>
+	@Html.ActionLink("Create New", "Create")
+</p>
+
+<hr/>
+
 @using (Html.BeginForm("Index", "GamingMachines", FormMethod.Get))
 {
 	<p>
