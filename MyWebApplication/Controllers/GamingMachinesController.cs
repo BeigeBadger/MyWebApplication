@@ -35,6 +35,7 @@ namespace MyWebApplication.Controllers
 		/// <param name="currentFilter">A backup of the user's filter so that we can maintain it through paging</param>
 		/// <param name="page">The current page we are on</param>
 		/// <returns></returns>
+		[HttpGet]
 		public ActionResult Index(string sortBy, string filterBy, string currentFilter, int? page, bool resetList = false)
 		{
 			if (resetList)
@@ -63,6 +64,13 @@ namespace MyWebApplication.Controllers
 			return View(_gamingMachines.ToPagedList(pageNumber, PageSize));
 		}
 
+		/// <summary>
+		/// Navigates to the Create view and optionally
+		/// displays a success message
+		/// </summary>
+		/// <param name="machineName">[Optional]The name of the machine that was successfully created</param>
+		/// <returns>A new Create view</returns>
+		[HttpGet]
 		public ActionResult Create(string machineName)
 		{
 			if (!string.IsNullOrWhiteSpace(machineName))
@@ -75,6 +83,13 @@ namespace MyWebApplication.Controllers
 			return View();
 		}
 
+		/// <summary>
+		/// Creates a new Gaming Machine using Bind to
+		/// prevent overposting and antiforgery to prevent
+		/// XSS attacks
+		/// </summary>
+		/// <param name="gamingMachine">The gaming machine to create</param>
+		/// <returns>The Create view with validation errors or the Index view with a success message</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Create([Bind(Include = "SerialNumber, MachinePosition, Name")]GamingMachine gamingMachine)
