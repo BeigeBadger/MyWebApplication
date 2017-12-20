@@ -1,0 +1,58 @@
+﻿@model MyWebApplication.GamingMachine
+
+@{
+	ViewBag.Title = "Edit Page";
+
+	var feedbackClasses = ViewBag.UpdateSucceeded == null
+		? ""
+		: ViewBag.UpdateSucceeded ? "alert alert-success" : "alert alert-danger";
+}
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+		<h4>Update @Model.Name</h4>
+		<hr />
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		<!-- Have the serial number shown in a hidden field so that it will be passed through on submit -->
+		@Html.HiddenFor(model => model.SerialNumber)
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.MachinePosition, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.MachinePosition, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.MachinePosition, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="@feedbackClasses">
+			<p>
+				@ViewBag.UpdateResultMessage
+			</p>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Update" class="btn btn-default" />
+			</div>
+		</div>
+	</div>
+}
+
+<div>
+	@Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+	@Scripts.Render("~/Scripts/jquery.validate.js")
+}

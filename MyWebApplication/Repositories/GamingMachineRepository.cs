@@ -9,7 +9,7 @@ namespace MyWebApplication.Repositories
 	{
 		List<GamingMachine> Get(int page = 0, int skip = 10, string filter = "");
 
-		GamingMachine Get(int gamingSerialNumber);
+		GamingMachine Get(long serialNumber);
 
 		Result CreateGamingMachine(GamingMachine gamingMachine);
 
@@ -46,10 +46,10 @@ namespace MyWebApplication.Repositories
 			return machinesOnPage;
 		}
 
-		public GamingMachine Get(int gamingSerialNumber)
+		public GamingMachine Get(long serialNumber)
 		{
 			// TODO: long to int parsing issue here
-			GamingMachine gamingMachine = GamingMachineDatabase.SingleOrDefault(g => g.SerialNumber == gamingSerialNumber);
+			GamingMachine gamingMachine = GamingMachineDatabase.SingleOrDefault(g => g.SerialNumber == serialNumber);
 
 			return gamingMachine;
 		}
@@ -143,7 +143,7 @@ namespace MyWebApplication.Repositories
 			{
 				bool deleted = i % 9 == 0;
 
-				GamingMachine gamingMachine = new GamingMachine(i, i, $"Game{i}", DateTime.Now, deleted);
+				GamingMachine gamingMachine = new GamingMachine(i, i, $"Machine No. {i}", DateTime.Now, deleted);
 
 				GamingMachineDatabase.Add(gamingMachine);
 			}

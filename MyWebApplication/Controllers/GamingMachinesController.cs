@@ -3,6 +3,7 @@ using MyWebApplication.Repositories;
 using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -27,14 +28,14 @@ namespace MyWebApplication.Controllers
 			}
 		}
 
-		// GET: GamingMachines
 		/// <summary>
+		/// Loads the list of gaming machines
 		/// </summary>
 		/// <param name="sortBy">What column to sort on and whether we should sort by ASC or DESC</param>
 		/// <param name="filterBy">What the user would like to filter the results by aka search string</param>
 		/// <param name="currentFilter">A backup of the user's filter so that we can maintain it through paging</param>
 		/// <param name="page">The current page we are on</param>
-		/// <returns></returns>
+		/// <returns>A new Index view with a paged list of gaming machines populated</returns>
 		[HttpGet]
 		public ActionResult Index(string sortBy, string filterBy, string currentFilter, int? page, bool resetList = false)
 		{
@@ -89,7 +90,7 @@ namespace MyWebApplication.Controllers
 		/// XSS attacks
 		/// </summary>
 		/// <param name="gamingMachine">The gaming machine to create</param>
-		/// <returns>The Create view with validation errors or the Index view with a success message</returns>
+		/// <returns>The Create view with validation errors or a success message</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Create([Bind(Include = "SerialNumber, MachinePosition, Name")]GamingMachine gamingMachine)
@@ -120,9 +121,92 @@ namespace MyWebApplication.Controllers
 			return View();
 		}
 
-		// TODO: Add gaming machine (POST)
+		/// <summary>
+		/// Load a gaming machine to edit and optionally
+		/// displays a success message
+		/// </summary>
+		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
+		/// <returns>A new Edit view with the details of the provided gaming machine populated</returns>
+		[HttpGet]
+		public ActionResult Edit(long serialNumber, string machineName)
+		{
+			// Get by serial
+			GamingMachine gamingMachine = GamingMachineRepository.Get(serialNumber);
 
-		// TODO: Update gaming machine (PATCH)
+			if (gamingMachine == null)
+			{
+				return HttpNotFound();
+			}
+
+			if (!string.IsNullOrWhiteSpace(machineName))
+			{
+				// Set success message
+				ViewBag.UpdateResultMessage = $"Successfully updated machine with name (old/new) '{machineName}'.";
+				ViewBag.UpdateSucceeded = true;
+			}
+
+			return View(gamingMachine);
+		}
+
+		/// <summary>
+		/// Have to use HttpPost as HttpPut is not supported
+		/// by Asp.NET MVC5.
+		///
+		/// Also use ActionName to get around the error about
+		/// two methods with the same signature but also still
+		/// call the correct method using aliasing.
+		///
+		/// Use antiforgery to prevent XSS attacks
+		/// </summary>
+		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
+		/// <returns>The Edit view with validation errors or the Index view with a success message</returns>
+		[HttpPost, ActionName("Edit")]
+		[ValidateAntiForgeryToken]
+		public ActionResult EditMachine(long serialNumber)
+		{
+			// Get by serial
+			GamingMachine gamingMachineToUpdate = GamingMachineRepository.Get(serialNumber);
+			string failureMessage = $"Model validation failed.";
+
+			if (ModelState.IsValid)
+			{
+				string oldName = gamingMachineToUpdate.Name;
+				int oldPosition = gamingMachineToUpdate.MachinePosition;
+
+				try
+				{
+					// Attempt to update model - Provide a list of properties that are allowed to be updated
+					UpdateModel(gamingMachineToUpdate, "", new string[] { "MachinePosition", "Name" });
+
+					Result result = GamingMachineRepository.UpdateGamingMachine(gamingMachineToUpdate);
+
+					if (result.ResultCode == ResultTypeEnum.Success)
+					{
+						// Update the list used by the view to include the new entry
+						RestoreDatabaseBackup();
+
+						// Use PRG pattern to prevent resubmit on page refresh
+						return RedirectToAction("Edit", new { serialNumber, machineName = $"{oldName}/{gamingMachineToUpdate.Name}" });
+					}
+
+					failureMessage = $"There was an error updating the machine: {result.ResultMessage}";
+				}
+				catch (Exception)
+				{
+					// Reset the name and position values to their original state UpdateModel() overwrites them and updates the master
+					// list somehow... this will not reinstate them inside the Edit form (good behaviour) but prevents the master list
+					// from being updated with bogus values
+					gamingMachineToUpdate.Name = oldName;
+					gamingMachineToUpdate.MachinePosition = oldPosition;
+				}
+			}
+
+			// Set failure message
+			ViewBag.UpdateResultMessage = failureMessage;
+			ViewBag.UpdateSucceeded = false;
+
+			return View(gamingMachineToUpdate);
+		}
 
 		// TODO: Delete gaming machine (DELETE)
 
