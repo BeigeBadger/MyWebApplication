@@ -216,8 +216,6 @@ namespace MyWebApplication.Controllers
 			return View(editViewModel);
 		}
 
-		}
-
 		// TODO: Delete gaming machine (DELETE)
 
 		private void SortItems(string sortBy)
