@@ -184,6 +184,7 @@
     <Compile Include="Repositories\GamingMachineRepository.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="ViewModels\GamingMachineCreateViewModel.cs" />
+    <Compile Include="ViewModels\GamingMachineEditViewModel.cs" />
     <Compile Include="ViewModels\GamingMachineBaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

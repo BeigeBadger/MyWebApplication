@@ -121,13 +121,13 @@ namespace MyWebApplication.Controllers
 		}
 
 		/// <summary>
-		/// Load a gaming machine to edit and optionally
-		/// displays a success message
+		/// Navigates to the Edit view and display the details for a gaming machine
+		/// specified the the serial number
 		/// </summary>
 		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
 		/// <returns>A new Edit view with the details of the provided gaming machine populated</returns>
 		[HttpGet]
-		public ActionResult Edit(long? serialNumber, string machineName)
+		public ActionResult Edit(long? serialNumber)
 		{
 			if (serialNumber == null)
 			{
@@ -142,14 +142,13 @@ namespace MyWebApplication.Controllers
 				return HttpNotFound();
 			}
 
-			if (!string.IsNullOrWhiteSpace(machineName))
-			{
-				// Set success message
-				ViewBag.UpdateResultMessage = $"Successfully updated machine with name (old/new) '{machineName}'.";
-				ViewBag.UpdateSucceeded = true;
-			}
+			GamingMachineEditViewModel vm = new GamingMachineEditViewModel(
+				gamingMachine.SerialNumber,
+				gamingMachine.MachinePosition,
+				gamingMachine.Name
+			);
 
-			return View(gamingMachine);
+			return View(vm);
 		}
 
 		/// <summary>
@@ -168,26 +167,24 @@ namespace MyWebApplication.Controllers
 		/// <returns>The Edit view with validation errors or the Index view with a success message</returns>
 		[HttpPost, ActionName("Edit")]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditMachine(long? serialNumber)
+		public ActionResult EditMachine(GamingMachineEditViewModel editViewModel)
 		{
-			if (serialNumber == null)
-			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			}
-
-			// Get by serial
-			GamingMachine gamingMachineToUpdate = GamingMachineRepository.Get(serialNumber.Value);
+			long serialNumber = editViewModel.SerialNumber.Value;
 			string failureMessage = $"Model validation failed.";
 
 			if (ModelState.IsValid)
 			{
-				string oldName = gamingMachineToUpdate.Name;
-				int oldPosition = gamingMachineToUpdate.MachinePosition;
-
 				try
 				{
-					// Attempt to update model - Provide a list of properties that are allowed to be updated
-					UpdateModel(gamingMachineToUpdate, "", new string[] { "MachinePosition", "Name" });
+					// Get by serial
+					GamingMachine gamingMachineToUpdate = GamingMachineRepository.Get(serialNumber);
+
+					string oldName = gamingMachineToUpdate.Name;
+					int oldPosition = gamingMachineToUpdate.MachinePosition;
+
+					// Update model - TODO add helper method for this
+					gamingMachineToUpdate.Name = editViewModel.Name;
+					gamingMachineToUpdate.MachinePosition = editViewModel.Position.Value;
 
 					Result result = GamingMachineRepository.UpdateGamingMachine(gamingMachineToUpdate);
 
@@ -196,27 +193,29 @@ namespace MyWebApplication.Controllers
 						// Update the list used by the view to include the new entry
 						RestoreDatabaseBackup();
 
+						// Set success message
+						TempData.Add("updateResultMessage", $"Successfully updated {oldName}/{gamingMachineToUpdate.Name}!");
+						TempData.Add("updateSucceeded", true);
+
 						// Use PRG pattern to prevent resubmit on page refresh
-						return RedirectToAction("Edit", new { serialNumber, machineName = $"{oldName}/{gamingMachineToUpdate.Name}" });
+						return RedirectToAction("Edit", new { serialNumber = serialNumber });
 					}
 
 					failureMessage = $"There was an error updating the machine: {result.ResultMessage}";
 				}
 				catch (Exception)
 				{
-					// Reset the name and position values to their original state UpdateModel() overwrites them and updates the master
-					// list somehow... this will not reinstate them inside the Edit form (good behaviour) but prevents the master list
-					// from being updated with bogus values
-					gamingMachineToUpdate.Name = oldName;
-					gamingMachineToUpdate.MachinePosition = oldPosition;
+					failureMessage = "An exception occured while attempting to update the machine, please reload the page and try again";
 				}
 			}
 
 			// Set failure message
-			ViewBag.UpdateResultMessage = failureMessage;
-			ViewBag.UpdateSucceeded = false;
+			TempData.Add("updateResultMessage", failureMessage);
+			TempData.Add("updateSucceeded", false);
 
-			return View(gamingMachineToUpdate);
+			return View(editViewModel);
+		}
+
 		}
 
 		// TODO: Delete gaming machine (DELETE)
