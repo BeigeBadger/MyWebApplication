@@ -90,25 +90,32 @@ namespace MyWebApplication.Controllers
 		{
 			string failureMessage = $"Model validation failed.";
 
-			if (ModelState.IsValid)
+			try
 			{
-				GamingMachine gamingMachineToCreate = GamingMachineHelper.GetGamingMachineModelFromCreateViewModel(createViewModel);
-				Result result = GamingMachineRepository.CreateGamingMachine(gamingMachineToCreate);
-
-				if (result.ResultCode == ResultTypeEnum.Success)
+				if (ModelState.IsValid)
 				{
-					// Update the list used by the view to include the new entry
-					RestoreDatabaseBackup();
+					GamingMachine gamingMachineToCreate = GamingMachineHelper.GetGamingMachineModelFromCreateViewModel(createViewModel);
+					Result result = GamingMachineRepository.CreateGamingMachine(gamingMachineToCreate);
 
-					// Set success message
-					TempData.Add("CreateResultMessage", $"Successfully created machine with name '{gamingMachineToCreate.Name}'.");
-					TempData.Add("CreateSucceeded", true);
+					if (result.ResultCode == ResultTypeEnum.Success)
+					{
+						// Update the list used by the view to include the new entry
+						RestoreDatabaseBackup();
 
-					// Use PRG pattern to prevent resubmit on page refresh
-					return RedirectToAction("Create");
+						// Set success message
+						TempData.Add("CreateResultMessage", $"Successfully created machine with name '{gamingMachineToCreate.Name}'.");
+						TempData.Add("CreateSucceeded", true);
+
+						// Use PRG pattern to prevent resubmit on page refresh
+						return RedirectToAction("Create");
+					}
+
+					failureMessage = $"There was an error creating the machine: {result.ResultMessage}";
 				}
-
-				failureMessage = $"There was an error creating the machine: {result.ResultMessage}";
+			}
+			catch (Exception)
+			{
+				failureMessage = "An exception occured while attempting to create the machine, please reload the page and try again";
 			}
 
 			// Set failure message
@@ -127,20 +134,31 @@ namespace MyWebApplication.Controllers
 		[HttpGet]
 		public ActionResult Edit(long? serialNumber)
 		{
-			if (serialNumber == null)
+			GamingMachineEditViewModel editViewModel = new GamingMachineEditViewModel();
+
+			try
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (serialNumber == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+
+				// Get by serial
+				GamingMachine gamingMachine = GamingMachineRepository.GetBySerial(serialNumber.Value);
+
+				if (gamingMachine == null)
+				{
+					return HttpNotFound();
+				}
+
+				editViewModel = GamingMachineHelper.GetEditViewModelFromGamingMachineModel(gamingMachine);
 			}
-
-			// Get by serial
-			GamingMachine gamingMachine = GamingMachineRepository.GetBySerial(serialNumber.Value);
-
-			if (gamingMachine == null)
+			catch (Exception)
 			{
-				return HttpNotFound();
+				// Set failure message
+				TempData.Add("UpdateResultMessage", "An exception occured while attempting to retrieve the machine to update, please reload the page and try again");
+				TempData.Add("UpdateSucceeded", false);
 			}
-
-			GamingMachineEditViewModel editViewModel = GamingMachineHelper.GetEditViewModelFromGamingMachineModel(gamingMachine);
 
 			return View(editViewModel);
 		}
@@ -164,9 +182,9 @@ namespace MyWebApplication.Controllers
 			long serialNumber = editViewModel.SerialNumber.Value;
 			string failureMessage = $"Model validation failed.";
 
-			if (ModelState.IsValid)
+			try
 			{
-				try
+				if (ModelState.IsValid)
 				{
 					// Get by serial
 					GamingMachine gamingMachineToUpdate = GamingMachineRepository.GetBySerial(serialNumber);
@@ -198,10 +216,10 @@ namespace MyWebApplication.Controllers
 
 					failureMessage = $"There was an error updating the machine: {result.ResultMessage}";
 				}
-				catch (Exception)
-				{
-					failureMessage = "An exception occured while attempting to update the machine, please reload the page and try again";
-				}
+			}
+			catch (Exception)
+			{
+				failureMessage = "An exception occured while attempting to update the machine, please reload the page and try again";
 			}
 
 			// Set failure message
@@ -219,20 +237,31 @@ namespace MyWebApplication.Controllers
 		[HttpGet]
 		public ActionResult Delete(long? serialNumber)
 		{
-			if (serialNumber == null)
+			GamingMachineDeleteViewModel deleteViewModel = new GamingMachineDeleteViewModel();
+
+			try
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (serialNumber == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+
+				// Get by serial
+				GamingMachine gamingMachine = GamingMachineRepository.GetBySerial(serialNumber.Value);
+
+				if (gamingMachine == null)
+				{
+					return HttpNotFound();
+				}
+
+				deleteViewModel = GamingMachineHelper.GetDeleteViewModelFromGamingMachineModel(gamingMachine);
 			}
-
-			// Get by serial
-			GamingMachine gamingMachine = GamingMachineRepository.GetBySerial(serialNumber.Value);
-
-			if (gamingMachine == null)
+			catch (Exception)
 			{
-				return HttpNotFound();
+				// Set failure message
+				TempData.Add("DeleteResultMessage", "An exception occured while attempting retrieve the machine for deletion, please reload the page and try again");
+				TempData.Add("DeleteSucceeded", false);
 			}
-
-			GamingMachineDeleteViewModel deleteViewModel = GamingMachineHelper.GetDeleteViewModelFromGamingMachineModel(gamingMachine);
 
 			return View(deleteViewModel);
 		}
@@ -256,9 +285,9 @@ namespace MyWebApplication.Controllers
 			GamingMachine gamingMachineToDelete = null;
 			string failureMessage = $"Model validation failed.";
 
-			if (ModelState.IsValid)
+			try
 			{
-				try
+				if (ModelState.IsValid)
 				{
 					// Get by serial
 					gamingMachineToDelete = GamingMachineRepository.GetBySerial(serialNumber.Value);
@@ -286,10 +315,10 @@ namespace MyWebApplication.Controllers
 
 					failureMessage = $"There was an error deleting the machine: {result.ResultMessage}";
 				}
-				catch (Exception)
-				{
-					failureMessage = "An exception occured while attempting to delete the machine, please reload the page and try again";
-				}
+			}
+			catch (Exception)
+			{
+				failureMessage = "An exception occured while attempting to delete the machine, please reload the page and try again";
 			}
 
 			// Set failure message - Used in both Index.cshtml and Delete.cshtml
