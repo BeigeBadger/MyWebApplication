@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 
 namespace MyWebApplication.Controllers
@@ -128,10 +129,15 @@ namespace MyWebApplication.Controllers
 		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
 		/// <returns>A new Edit view with the details of the provided gaming machine populated</returns>
 		[HttpGet]
-		public ActionResult Edit(long serialNumber, string machineName)
+		public ActionResult Edit(long? serialNumber, string machineName)
 		{
+			if (serialNumber == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+
 			// Get by serial
-			GamingMachine gamingMachine = GamingMachineRepository.Get(serialNumber);
+			GamingMachine gamingMachine = GamingMachineRepository.Get(serialNumber.Value);
 
 			if (gamingMachine == null)
 			{
@@ -149,8 +155,10 @@ namespace MyWebApplication.Controllers
 		}
 
 		/// <summary>
+		/// Update a gaming machine
+		///
 		/// Have to use HttpPost as HttpPut is not supported
-		/// by Asp.NET MVC5.
+		/// by ASP.NET MVC5.
 		///
 		/// Also use ActionName to get around the error about
 		/// two methods with the same signature but also still
@@ -162,10 +170,15 @@ namespace MyWebApplication.Controllers
 		/// <returns>The Edit view with validation errors or the Index view with a success message</returns>
 		[HttpPost, ActionName("Edit")]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditMachine(long serialNumber)
+		public ActionResult EditMachine(long? serialNumber)
 		{
+			if (serialNumber == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+
 			// Get by serial
-			GamingMachine gamingMachineToUpdate = GamingMachineRepository.Get(serialNumber);
+			GamingMachine gamingMachineToUpdate = GamingMachineRepository.Get(serialNumber.Value);
 			string failureMessage = $"Model validation failed.";
 
 			if (ModelState.IsValid)
