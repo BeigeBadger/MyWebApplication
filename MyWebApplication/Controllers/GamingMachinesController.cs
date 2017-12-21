@@ -354,11 +354,11 @@ namespace MyWebApplication.Controllers
 					break;
 
 				case "NameAsc":
-					_gamingMachines = _gamingMachines.OrderBy(g => g.Name).ToList();
+					_gamingMachines = _gamingMachines.OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase).ToList();
 					break;
 
 				case "NameDesc":
-					_gamingMachines = _gamingMachines.OrderByDescending(g => g.Name).ToList();
+					_gamingMachines = _gamingMachines.OrderByDescending(g => g.Name, StringComparer.OrdinalIgnoreCase).ToList();
 					break;
 
 				case "SerialAsc":
