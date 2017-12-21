@@ -142,13 +142,13 @@ namespace MyWebApplication.Controllers
 				return HttpNotFound();
 			}
 
-			GamingMachineEditViewModel vm = new GamingMachineEditViewModel(
+			GamingMachineEditViewModel editViewModel = new GamingMachineEditViewModel(
 				gamingMachine.SerialNumber,
 				gamingMachine.MachinePosition,
 				gamingMachine.Name
 			);
 
-			return View(vm);
+			return View(editViewModel);
 		}
 
 		/// <summary>
