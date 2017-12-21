@@ -194,8 +194,8 @@ namespace MyWebApplication.Controllers
 						RestoreDatabaseBackup();
 
 						// Set success message
-						TempData.Add("updateResultMessage", $"Successfully updated {oldName}/{gamingMachineToUpdate.Name}!");
-						TempData.Add("updateSucceeded", true);
+						TempData.Add("UpdateResultMessage", $"Successfully updated {oldName}/{gamingMachineToUpdate.Name}!");
+						TempData.Add("UpdateSucceeded", true);
 
 						// Use PRG pattern to prevent resubmit on page refresh
 						return RedirectToAction("Edit", new { serialNumber = serialNumber });
@@ -210,8 +210,8 @@ namespace MyWebApplication.Controllers
 			}
 
 			// Set failure message
-			TempData.Add("updateResultMessage", failureMessage);
-			TempData.Add("updateSucceeded", false);
+			TempData.Add("UpdateResultMessage", failureMessage);
+			TempData.Add("UpdateSucceeded", false);
 
 			return View(editViewModel);
 		}

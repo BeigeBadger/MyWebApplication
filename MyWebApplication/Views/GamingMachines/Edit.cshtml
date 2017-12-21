@@ -3,9 +3,9 @@
 @{
 	ViewBag.Title = "Edit Page";
 
-	var feedbackClasses = !TempData.ContainsKey("updateSucceeded")
+	var feedbackClasses = !TempData.ContainsKey("UpdateSucceeded")
 		? ""
-		: (bool)TempData["updateSucceeded"] ? "alert alert-success" : "alert alert-danger";
+		: (bool)TempData["UpdateSucceeded"] ? "alert alert-success" : "alert alert-danger";
 }
 
 @using (Html.BeginForm())
@@ -44,7 +44,7 @@
 
 		<div class="@feedbackClasses">
 			<p>
-				@(TempData.ContainsKey("updateResultMessage") ? TempData["updateResultMessage"].ToString() : "")
+				@(TempData.ContainsKey("UpdateResultMessage") ? TempData["UpdateResultMessage"].ToString() : "")
 			</p>
 		</div>
 
