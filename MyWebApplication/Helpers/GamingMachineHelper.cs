@@ -1,4 +1,5 @@
 ﻿using MyWebApplication.ViewModels;
+using System;
 
 namespace MyWebApplication.Helpers
 {
@@ -43,6 +44,22 @@ namespace MyWebApplication.Helpers
 		{
 			gamingMachine.Name = editViewModel.Name;
 			gamingMachine.MachinePosition = editViewModel.Position.Value;
+		}
+
+		/// <summary>
+		/// Create a new <see cref="GamingMachineDeleteViewModel"/>
+		/// from the provided <see cref="GamingMachine"/>
+		/// </summary>
+		/// <param name="gamingMachine"></param>
+		/// <returns></returns>
+		public static GamingMachineDeleteViewModel GetDeleteViewModelFromGamingMachineModel(GamingMachine gamingMachine)
+		{
+			long serialNumber = gamingMachine.SerialNumber;
+			int position = gamingMachine.MachinePosition;
+			string name = gamingMachine.Name;
+			DateTime createdAt = gamingMachine.CreatedAt;
+
+			return new GamingMachineDeleteViewModel(serialNumber, position, name, createdAt);
 		}
 	}
 }
