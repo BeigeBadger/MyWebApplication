@@ -86,17 +86,15 @@ namespace MyWebApplication.Controllers
 		}
 
 		/// <summary>
-		/// Creates a new Gaming Machine using Bind to
-		/// prevent overposting and antiforgery to prevent
-		/// XSS attacks
+		/// Creates a new Gaming Machine using antiforgery
+		/// token to prevent XSS attacks
 		/// </summary>
 		/// <param name="gamingMachine">The gaming machine to create</param>
 		/// <returns>The Create view with validation errors or a success message</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create([Bind(Include = "SerialNumber, MachinePosition, Name")]GamingMachine gamingMachine)
+		public ActionResult Create(GamingMachine gamingMachine)
 		{
-			//List<ModelError> modelStateErrors = ModelState.Values.SelectMany(v => v.Errors).ToList();
 			string failureMessage = $"Model validation failed.";
 
 			if (ModelState.IsValid)
