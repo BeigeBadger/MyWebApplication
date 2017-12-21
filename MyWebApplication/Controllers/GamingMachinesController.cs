@@ -85,7 +85,7 @@ namespace MyWebApplication.Controllers
 		/// <summary>
 		/// Creates a new <see cref="GamingMachine"/>
 		/// </summary>
-		/// <param name="gamingMachine">The gaming machine to create</param>
+		/// <param name="gamingMachine">The <see cref="GamingMachine"/> to create</param>
 		/// <returns>A <see cref="GamingMachineCreateViewModel"/> with validation errors or a success message</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -124,10 +124,10 @@ namespace MyWebApplication.Controllers
 		}
 
 		/// <summary>
-		/// Navigates to the Edit view and display the details for a gaming machine
+		/// Navigates to the Edit view and display the details for a <see cref="GamingMachine"/>
 		/// specified the the serial number
 		/// </summary>
-		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
+		/// <param name="serialNumber">The serial number of the <see cref="GamingMachine"/> to update</param>
 		/// <returns>A new <see cref="GamingMachineEditViewModel"/> with the details of the <see cref="GamingMachine"/> associated with the serial number populated</returns>
 		[HttpGet]
 		public ActionResult Edit(long? serialNumber)
@@ -160,7 +160,7 @@ namespace MyWebApplication.Controllers
 		/// two methods with the same signature but also still
 		/// call the correct method using aliasing.
 		/// </summary>
-		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
+		/// <param name="editViewModel">The <see cref="GamingMachineEditViewModel"/> to use to update a <see cref="GamingMachine"/></param>
 		/// <returns>A <see cref="GamingMachineEditViewModel"/> with validation errors or a success message</returns>
 		[HttpPost, ActionName("Edit")]
 		[ValidateAntiForgeryToken]
