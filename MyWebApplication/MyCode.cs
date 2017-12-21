@@ -9,7 +9,7 @@ namespace MyWebApplication
 		/// unique number which will be used to identify a gaming machine
 		/// </summary>
 		[Required]
-		[Range(0, Int64.MaxValue)]
+		[Range(0, long.MaxValue)]
 		[Display(Name = "Serial")]
 		public long SerialNumber { get; set; }
 
