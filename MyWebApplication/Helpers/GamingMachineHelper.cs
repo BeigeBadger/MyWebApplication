@@ -6,12 +6,11 @@ namespace MyWebApplication.Helpers
 	{
 		/// <summary>
 		/// Create a new <see cref="GamingMachine"/>
-		/// with it's properties populated from the
-		/// provided <see cref="GamingMachineCreateViewModel"/>
+		/// from the provided <see cref="GamingMachineCreateViewModel"/>
 		/// </summary>
 		/// <param name="createViewModel"></param>
 		/// <returns>A new <see cref="GamingMachine"/></returns>
-		public static GamingMachine CreateGamingMachineModelFromCreateViewModel(GamingMachineCreateViewModel createViewModel)
+		public static GamingMachine GetGamingMachineModelFromCreateViewModel(GamingMachineCreateViewModel createViewModel)
 		{
 			long serialNumber = createViewModel.SerialNumber.Value;
 			int position = createViewModel.Position.Value;
@@ -22,12 +21,11 @@ namespace MyWebApplication.Helpers
 
 		/// <summary>
 		/// Create a new <see cref="GamingMachineEditViewModel" />
-		/// with it's properties populated from the provided
-		/// <see cref="GamingMachine"/>
+		/// from the provided <see cref="GamingMachine"/>
 		/// </summary>
 		/// <param name="gamingMachine">The source object</param>
 		/// <returns>A new <see cref="GamingMachineEditViewModel"/></returns>
-		public static GamingMachineEditViewModel CreateEditViewModelFromGamingMachineModel(GamingMachine gamingMachine)
+		public static GamingMachineEditViewModel GetEditViewModelFromGamingMachineModel(GamingMachine gamingMachine)
 		{
 			long serialNumber = gamingMachine.SerialNumber;
 			int position = gamingMachine.MachinePosition;
@@ -37,7 +35,7 @@ namespace MyWebApplication.Helpers
 		}
 
 		/// <summary>
-		/// Copy properties from edit view model onto the provided gaming machine model
+		/// Copy properties from a <see cref="GamingMachineEditViewModel"/> onto a <see cref="GamingMachine"/>
 		/// </summary>
 		/// <param name="gamingMachine">The target object</param>
 		/// <param name="editViewModel">The source object</param>
