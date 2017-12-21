@@ -2,6 +2,10 @@
 
 namespace MyWebApplication.ViewModels
 {
+	/// <summary>
+	/// Cannot be abstract otherwise we cannot instantiate instances of the child classes,
+	/// cannot be an interface, protected or internal might work
+	/// </summary>
 	public class GamingMachineBaseViewModel
 	{
 		[Required]
@@ -16,15 +20,6 @@ namespace MyWebApplication.ViewModels
 		[Required]
 		[Display(Name = "Name")]
 		public string Name { get; set; }
-
-		//[Required]
-		//[Display(Name = "Created at")]
-		//[DisplayFormat(DataFormatString = "{0:O}")]         // ISO 8601
-		//public DateTime? CreatedAt { get; set; }
-
-		//[Required]
-		//[Display(Name = "Deleted")]
-		//public bool? IsDeleted { get; set; }
 
 		/// <summary>
 		/// DO NOT CALL THIS DIRECTLY
