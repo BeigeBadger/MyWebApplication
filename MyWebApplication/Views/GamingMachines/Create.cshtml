@@ -1,11 +1,11 @@
-﻿@model MyWebApplication.GamingMachine
+﻿@model MyWebApplication.ViewModels.GamingMachineCreateViewModel
 
 @{
 	ViewBag.Title = "Create Page";
 
-	var feedbackClasses = ViewBag.CreatedSucceeded == null
+	var feedbackClasses = !TempData.ContainsKey("CreateSucceeded")
 		? ""
-		: ViewBag.CreatedSucceeded ? "alert alert-success" : "alert alert-danger";
+		: (bool)TempData["CreateSucceeded"] ? "alert alert-success" : "alert alert-danger";
 }
 
 @using (Html.BeginForm())
@@ -17,10 +17,10 @@
 		<hr />
 		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 		<div class="form-group">
-			@Html.LabelFor(model => model.MachinePosition, htmlAttributes: new { @class = "control-label col-md-2" })
+			@Html.LabelFor(model => model.Position, htmlAttributes: new { @class = "control-label col-md-2" })
 			<div class="col-md-10">
-				@Html.EditorFor(model => model.MachinePosition, new { htmlAttributes = new { @class = "form-control" } })
-				@Html.ValidationMessageFor(model => model.MachinePosition, "", new { @class = "text-danger" })
+				@Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
 			</div>
 		</div>
 
@@ -42,7 +42,7 @@
 
 		<div class="@feedbackClasses">
 			<p>
-				@ViewBag.CreateResultMessage
+				@(TempData.ContainsKey("CreateResultMessage") ? TempData["CreateResultMessage"].ToString() : "")
 			</p>
 		</div>
 

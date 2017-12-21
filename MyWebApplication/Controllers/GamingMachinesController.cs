@@ -1,5 +1,6 @@
 ﻿using MyWebApplication.Models;
 using MyWebApplication.Repositories;
+using MyWebApplication.ViewModels;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -67,22 +68,14 @@ namespace MyWebApplication.Controllers
 		}
 
 		/// <summary>
-		/// Navigates to the Create view and optionally
-		/// displays a success message
+		/// Navigates to the Create view and displays controls for creating
+		/// a new gaming machine
 		/// </summary>
-		/// <param name="machineName">[Optional]The name of the machine that was successfully created</param>
 		/// <returns>A new Create view</returns>
 		[HttpGet]
-		public ActionResult Create(string machineName)
+		public ActionResult Create()
 		{
-			if (!string.IsNullOrWhiteSpace(machineName))
-			{
-				// Set success message
-				ViewBag.CreateResultMessage = $"Successfully created machine with name '{machineName}'.";
-				ViewBag.CreatedSucceeded = true;
-			}
-
-			return View();
+			return View(new GamingMachineCreateViewModel());
 		}
 
 		/// <summary>
@@ -93,31 +86,38 @@ namespace MyWebApplication.Controllers
 		/// <returns>The Create view with validation errors or a success message</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(GamingMachine gamingMachine)
+		public ActionResult Create(GamingMachineCreateViewModel createViewModel)
 		{
+			// TODO: Use ViewModel
 			string failureMessage = $"Model validation failed.";
 
 			if (ModelState.IsValid)
 			{
-				Result result = GamingMachineRepository.CreateGamingMachine(gamingMachine);
+				// TODO: Use extension method to do this
+				GamingMachine gamingMachineToCreate = new GamingMachine(createViewModel.SerialNumber.Value, createViewModel.Position.Value, createViewModel.Name);
+				Result result = GamingMachineRepository.CreateGamingMachine(gamingMachineToCreate);
 
 				if (result.ResultCode == ResultTypeEnum.Success)
 				{
 					// Update the list used by the view to include the new entry
 					RestoreDatabaseBackup();
 
+					// Set success message
+					TempData.Add("CreateResultMessage", $"Successfully created machine with name '{gamingMachineToCreate.Name}'.");
+					TempData.Add("CreateSucceeded", true);
+
 					// Use PRG pattern to prevent resubmit on page refresh
-					return RedirectToAction("Create", new { machineName = gamingMachine.Name });
+					return RedirectToAction("Create");
 				}
 
 				failureMessage = $"There was an error creating the machine: {result.ResultMessage}";
 			}
 
 			// Set failure message
-			ViewBag.CreateResultMessage = failureMessage;
-			ViewBag.CreatedSucceeded = false;
+			TempData.Add("CreateResultMessage", failureMessage);
+			TempData.Add("CreateSucceeded", false);
 
-			return View();
+			return View(createViewModel);
 		}
 
 		/// <summary>
