@@ -65,8 +65,6 @@ namespace MyWebApplication.Controllers
 
 			int pageNumber = (page ?? 1);
 
-			// TODO: Use view model here
-
 			return View(_gamingMachines.ToPagedList(pageNumber, PageSize));
 		}
 
