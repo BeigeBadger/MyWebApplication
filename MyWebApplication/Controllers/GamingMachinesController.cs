@@ -138,7 +138,7 @@ namespace MyWebApplication.Controllers
 			}
 
 			// Get by serial
-			GamingMachine gamingMachine = GamingMachineRepository.Get(serialNumber.Value);
+			GamingMachine gamingMachine = GamingMachineRepository.GetBySerial(serialNumber.Value);
 
 			if (gamingMachine == null)
 			{
@@ -174,7 +174,7 @@ namespace MyWebApplication.Controllers
 				try
 				{
 					// Get by serial
-					GamingMachine gamingMachineToUpdate = GamingMachineRepository.Get(serialNumber);
+					GamingMachine gamingMachineToUpdate = GamingMachineRepository.GetBySerial(serialNumber);
 
 					if (gamingMachineToUpdate == null)
 					{
@@ -230,7 +230,7 @@ namespace MyWebApplication.Controllers
 			}
 
 			// Get by serial
-			GamingMachine gamingMachine = GamingMachineRepository.Get(serialNumber.Value);
+			GamingMachine gamingMachine = GamingMachineRepository.GetBySerial(serialNumber.Value);
 
 			if (gamingMachine == null)
 			{
@@ -266,7 +266,7 @@ namespace MyWebApplication.Controllers
 				try
 				{
 					// Get by serial
-					gamingMachineToDelete = GamingMachineRepository.Get(serialNumber.Value);
+					gamingMachineToDelete = GamingMachineRepository.GetBySerial(serialNumber.Value);
 
 					if (gamingMachineToDelete == null)
 					{
