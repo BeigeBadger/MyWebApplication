@@ -185,6 +185,7 @@
     <Compile Include="Repositories\GamingMachineRepository.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="ViewModels\GamingMachineCreateViewModel.cs" />
+    <Compile Include="ViewModels\GamingMachineDeleteViewModel.cs" />
     <Compile Include="ViewModels\GamingMachineEditViewModel.cs" />
     <Compile Include="ViewModels\GamingMachineBaseViewModel.cs" />
   </ItemGroup>
@@ -230,6 +231,7 @@
     <Content Include="Views\GamingMachines\_GamingMachineList.cshtml" />
     <Content Include="Views\GamingMachines\Create.cshtml" />
     <Content Include="Views\GamingMachines\Edit.cshtml" />
+    <Content Include="Views\GamingMachines\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
