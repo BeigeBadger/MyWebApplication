@@ -15,9 +15,17 @@
 	<div class="form-horizontal">
 		<h4>Update @Model.Name</h4>
 		<hr />
+
 		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 		<!-- Have the serial number shown in a hidden field so that it will be passed through on submit -->
 		@Html.HiddenFor(model => model.SerialNumber)
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.SerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DisplayFor(model => model.SerialNumber, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+		</div>
 
 		<div class="form-group">
 			@Html.LabelFor(model => model.MachinePosition, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -53,6 +61,11 @@
 	@Html.ActionLink("Back to List", "Index")
 </div>
 
+<!--
+	Render inside the scripts place holder section that lives in _Layout.cshtml,
+	we do this so that our script is rendered/loaded AFTER we have included the
+	libraries and thus we don't get errors when trying to use their functionality
+-->
 @section Scripts {
 	@Scripts.Render("~/Scripts/jquery.validate.js")
 }
