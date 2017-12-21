@@ -34,7 +34,7 @@
 @using (Html.BeginForm("Index", "GamingMachines", FormMethod.Get))
 {
 	<p>
-		Filter by name: @Html.TextBox("filterBy", ViewBag.CurrentFilter as string)
+		Filter by name: @Html.TextBox("filterBy", (string)TempData["CurrentFilter"])
 		<input type="submit" value="Filter" id="btnSubmit" />
 		<input type="button" value="Clear" id="btnClear" />
 	</p>

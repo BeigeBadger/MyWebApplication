@@ -14,7 +14,6 @@ namespace MyWebApplication.Controllers
 {
 	public class GamingMachinesController : Controller
 	{
-		// TODO: Replace all ViewBag with TempData
 		private static List<GamingMachine> _gamingMachines = new List<GamingMachine>();
 
 		private readonly IGamingMachineRepository GamingMachineRepository;
@@ -58,7 +57,7 @@ namespace MyWebApplication.Controllers
 				filterBy = currentFilter;
 			}
 
-			ViewBag.CurrentFilter = filterBy;
+			TempData.Add("CurrentFilter", filterBy);
 
 			// Do any filtering first as it will make sorting less expensive
 			FilterItems(filterBy);
@@ -312,12 +311,12 @@ namespace MyWebApplication.Controllers
 				sortBy = "PositionAsc";
 
 			// Maintain sorting throughout paging
-			ViewBag.CurrentSort = sortBy;
+			TempData.Add("CurrentSort", sortBy);
 
 			// Check sorting
-			ViewBag.PositionSortParam = sortBy == "PositionAsc" ? "PositionDesc" : "PositionAsc";
-			ViewBag.NameSortParam = sortBy == "NameDesc" ? "NameAsc" : "NameDesc";
-			ViewBag.SerialSortParam = sortBy == "SerialDesc" ? "SerialAsc" : "SerialDesc";
+			TempData.Add("PositionSortParam", sortBy == "PositionAsc" ? "PositionDesc" : "PositionAsc");
+			TempData.Add("NameSortParam", sortBy == "NameDesc" ? "NameAsc" : "NameDesc");
+			TempData.Add("SerialSortParam", sortBy == "SerialDesc" ? "SerialAsc" : "SerialDesc");
 
 			switch (sortBy)
 			{

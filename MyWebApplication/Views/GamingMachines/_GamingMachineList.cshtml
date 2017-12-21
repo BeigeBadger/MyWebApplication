@@ -16,13 +16,13 @@
 <table class="table">
 	<tr>
 		<th>
-			@Html.ActionLink("Position", "Index", new { sortBy = ViewBag.PositionSortParam, currentFilter = ViewBag.CurrentFilter })
+			@Html.ActionLink("Position", "Index", new { sortBy = TempData["PositionSortParam"], currentFilter = TempData["CurrentFilter"] })
 		</th>
 		<th>
-			@Html.ActionLink("Name", "Index", new { sortBy = ViewBag.NameSortParam, currentFilter = ViewBag.CurrentFilter })
+			@Html.ActionLink("Name", "Index", new { sortBy = TempData["NameSortParam"], currentFilter = TempData["CurrentFilter"] })
 		</th>
 		<th>
-			@Html.ActionLink("Serial", "Index", new { sortBy = ViewBag.SerialSortParam, currentFilter = ViewBag.CurrentFilter })
+			@Html.ActionLink("Serial", "Index", new { sortBy = TempData["SerialSortParam"], currentFilter = TempData["CurrentFilter"] })
 		</th>
 		<th>
 			@Html.DisplayNameFor(model => model.CreatedAt)
@@ -65,4 +65,4 @@
 <br />
 Page @(pagedlist.PageCount < pagedlist.PageNumber ? 0 : pagedlist.PageNumber) of @pagedlist.PageCount
 
-@Html.PagedListPager(pagedlist, page => Url.Action("Index", new { page, sortBy = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+@Html.PagedListPager(pagedlist, page => Url.Action("Index", new { page, sortBy = TempData["CurrentSort"], currentFilter = TempData["CurrentFilter"] }))
