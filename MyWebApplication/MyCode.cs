@@ -32,7 +32,15 @@ namespace MyWebApplication
 		{
 		}
 
-		public GamingMachine(long serialNumber, int position, string name, DateTime createdAt, bool isDeleted)
+		public GamingMachine(long serialNumber, int position, string name, bool isDeleted = false)
+		{
+			SerialNumber = serialNumber;
+			MachinePosition = position;
+			Name = name;
+			IsDeleted = isDeleted;
+		}
+
+		public GamingMachine(long serialNumber, int position, string name, DateTime createdAt, bool isDeleted = false)
 		{
 			SerialNumber = serialNumber;
 			MachinePosition = position;
