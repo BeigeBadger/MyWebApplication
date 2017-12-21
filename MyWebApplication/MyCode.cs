@@ -10,7 +10,6 @@ namespace MyWebApplication
 		/// </summary>
 		[Required]
 		[Range(0, long.MaxValue)]
-		[Display(Name = "Serial")]
 		public long SerialNumber { get; set; }
 
 		/// <summary>
@@ -18,18 +17,15 @@ namespace MyWebApplication
 		/// </summary>
 		[Required]
 		[Range(0, 1000)]
-		[Display(Name = "Position")]
 		public int MachinePosition { get; set; } = 0;
 
 		[Required]
-		[Display(Name = "Name")]
 		public string Name { get; set; }
 
-		[Display(Name = "Created at")]
-		[DisplayFormat(DataFormatString = "{0:O}")]         // ISO 8601
+		[Required]
 		public DateTime CreatedAt { get; set; }
 
-		[Display(Name = "Deleted")]
+		[Required]
 		public bool IsDeleted { get; set; }
 
 		public GamingMachine()
