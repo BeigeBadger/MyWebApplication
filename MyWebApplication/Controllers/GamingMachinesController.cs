@@ -97,7 +97,7 @@ namespace MyWebApplication.Controllers
 			if (ModelState.IsValid)
 			{
 				// TODO: Use extension method to do this
-				GamingMachine gamingMachineToCreate = GamingMachineHelper.CreateGamingMachineModelFromCreateViewModel(createViewModel);
+				GamingMachine gamingMachineToCreate = GamingMachineHelper.GetGamingMachineModelFromCreateViewModel(createViewModel);
 				Result result = GamingMachineRepository.CreateGamingMachine(gamingMachineToCreate);
 
 				if (result.ResultCode == ResultTypeEnum.Success)
@@ -145,7 +145,7 @@ namespace MyWebApplication.Controllers
 				return HttpNotFound();
 			}
 
-			GamingMachineEditViewModel editViewModel = GamingMachineHelper.CreateEditViewModelFromGamingMachineModel(gamingMachine);
+			GamingMachineEditViewModel editViewModel = GamingMachineHelper.GetEditViewModelFromGamingMachineModel(gamingMachine);
 
 			return View(editViewModel);
 		}
