@@ -90,12 +90,10 @@ namespace MyWebApplication.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(GamingMachineCreateViewModel createViewModel)
 		{
-			// TODO: Use ViewModel
 			string failureMessage = $"Model validation failed.";
 
 			if (ModelState.IsValid)
 			{
-				// TODO: Use extension method to do this
 				GamingMachine gamingMachineToCreate = GamingMachineHelper.GetGamingMachineModelFromCreateViewModel(createViewModel);
 				Result result = GamingMachineRepository.CreateGamingMachine(gamingMachineToCreate);
 
@@ -252,7 +250,7 @@ namespace MyWebApplication.Controllers
 		/// call the correct method using aliasing.
 		/// </summary>
 		/// <param name="deleteViewModel">The <see cref="GamingMachineDeleteViewModel"/> to use to update a <see cref="GamingMachine"/></param>
-		/// <returns>A new <see cref="GamingMachineDeleteViewModel"/> with validation errors or a TODO success message</returns>
+		/// <returns>A new <see cref="GamingMachineDeleteViewModel"/> with validation errors or the TODO Index view with a success message</returns>
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteMachineConfirmed(long? serialNumber)

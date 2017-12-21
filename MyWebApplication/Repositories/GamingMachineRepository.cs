@@ -48,7 +48,6 @@ namespace MyWebApplication.Repositories
 
 		public GamingMachine GetBySerial(long serialNumber)
 		{
-			// TODO: long to int parsing issue here
 			GamingMachine gamingMachine = GamingMachineDatabase.SingleOrDefault(g => g.SerialNumber == serialNumber);
 
 			return gamingMachine;
@@ -69,9 +68,6 @@ namespace MyWebApplication.Repositories
 
 			PerformCreateOperation(gamingMachine);
 
-			// TODO: check what new result property values are
-			var x = new Result();
-
 			return new Result();
 		}
 
@@ -85,8 +81,6 @@ namespace MyWebApplication.Repositories
 				return new Result(ResultTypeEnum.Failure, $"A gaming machine with the serial number '{serialNumber}' could not be found");
 
 			PerformUpdateOperation(gamingMachine, index);
-			// TODO: check what new result property values are
-			var x = new Result();
 
 			return new Result();
 		}
@@ -101,9 +95,6 @@ namespace MyWebApplication.Repositories
 				return new Result(ResultTypeEnum.Failure, $"A gaming machine with the serial number '{serialNumber}' could not be found");
 
 			PerformDeleteOperation(index);
-
-			// TODO: check what new result property values are
-			var x = new Result();
 
 			return new Result();
 		}

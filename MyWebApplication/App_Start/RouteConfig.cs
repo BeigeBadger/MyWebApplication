@@ -26,8 +26,6 @@ namespace MyWebApplication
 				url: "{controller}/{action}",
 				defaults: new { controller = "Home", action = "Index" }
 			);
-
-			// TODO: Add more routes for CRUD operations
 		}
 	}
 }
