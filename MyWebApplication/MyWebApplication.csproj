@@ -178,6 +178,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\GamingMachineHelper.cs" />
     <Compile Include="Models\ResultTypeEnum.cs" />
     <Compile Include="MyCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

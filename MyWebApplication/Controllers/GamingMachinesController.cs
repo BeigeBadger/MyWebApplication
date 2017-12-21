@@ -1,4 +1,5 @@
-﻿using MyWebApplication.Models;
+﻿using MyWebApplication.Helpers;
+using MyWebApplication.Models;
 using MyWebApplication.Repositories;
 using MyWebApplication.ViewModels;
 using PagedList;
@@ -13,6 +14,7 @@ namespace MyWebApplication.Controllers
 {
 	public class GamingMachinesController : Controller
 	{
+		// TODO: Replace all ViewBag with TempData
 		private static List<GamingMachine> _gamingMachines = new List<GamingMachine>();
 
 		private readonly IGamingMachineRepository GamingMachineRepository;
@@ -64,14 +66,16 @@ namespace MyWebApplication.Controllers
 
 			int pageNumber = (page ?? 1);
 
+			// TODO: Use view model here
+
 			return View(_gamingMachines.ToPagedList(pageNumber, PageSize));
 		}
 
 		/// <summary>
 		/// Navigates to the Create view and displays controls for creating
-		/// a new gaming machine
+		/// a new <see cref="GamingMachine"/>
 		/// </summary>
-		/// <returns>A new Create view</returns>
+		/// <returns>A new <see cref="GamingMachineCreateViewModel"/></returns>
 		[HttpGet]
 		public ActionResult Create()
 		{
@@ -79,11 +83,10 @@ namespace MyWebApplication.Controllers
 		}
 
 		/// <summary>
-		/// Creates a new Gaming Machine using antiforgery
-		/// token to prevent XSS attacks
+		/// Creates a new <see cref="GamingMachine"/>
 		/// </summary>
 		/// <param name="gamingMachine">The gaming machine to create</param>
-		/// <returns>The Create view with validation errors or a success message</returns>
+		/// <returns>A <see cref="GamingMachineCreateViewModel"/> with validation errors or a success message</returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(GamingMachineCreateViewModel createViewModel)
@@ -94,7 +97,7 @@ namespace MyWebApplication.Controllers
 			if (ModelState.IsValid)
 			{
 				// TODO: Use extension method to do this
-				GamingMachine gamingMachineToCreate = new GamingMachine(createViewModel.SerialNumber.Value, createViewModel.Position.Value, createViewModel.Name);
+				GamingMachine gamingMachineToCreate = GamingMachineHelper.CreateGamingMachineModelFromCreateViewModel(createViewModel);
 				Result result = GamingMachineRepository.CreateGamingMachine(gamingMachineToCreate);
 
 				if (result.ResultCode == ResultTypeEnum.Success)
@@ -125,7 +128,7 @@ namespace MyWebApplication.Controllers
 		/// specified the the serial number
 		/// </summary>
 		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
-		/// <returns>A new Edit view with the details of the provided gaming machine populated</returns>
+		/// <returns>A new <see cref="GamingMachineEditViewModel"/> with the details of the <see cref="GamingMachine"/> associated with the serial number populated</returns>
 		[HttpGet]
 		public ActionResult Edit(long? serialNumber)
 		{
@@ -142,17 +145,13 @@ namespace MyWebApplication.Controllers
 				return HttpNotFound();
 			}
 
-			GamingMachineEditViewModel editViewModel = new GamingMachineEditViewModel(
-				gamingMachine.SerialNumber,
-				gamingMachine.MachinePosition,
-				gamingMachine.Name
-			);
+			GamingMachineEditViewModel editViewModel = GamingMachineHelper.CreateEditViewModelFromGamingMachineModel(gamingMachine);
 
 			return View(editViewModel);
 		}
 
 		/// <summary>
-		/// Update a gaming machine
+		/// Update a <see cref="GamingMachine"/>
 		///
 		/// Have to use HttpPost as HttpPut is not supported
 		/// by ASP.NET MVC5.
@@ -160,11 +159,9 @@ namespace MyWebApplication.Controllers
 		/// Also use ActionName to get around the error about
 		/// two methods with the same signature but also still
 		/// call the correct method using aliasing.
-		///
-		/// Use antiforgery to prevent XSS attacks
 		/// </summary>
 		/// <param name="serialNumber">The serial number of the gaming machine to update</param>
-		/// <returns>The Edit view with validation errors or the Index view with a success message</returns>
+		/// <returns>A <see cref="GamingMachineEditViewModel"/> with validation errors or a success message</returns>
 		[HttpPost, ActionName("Edit")]
 		[ValidateAntiForgeryToken]
 		public ActionResult EditMachine(GamingMachineEditViewModel editViewModel)
@@ -179,12 +176,15 @@ namespace MyWebApplication.Controllers
 					// Get by serial
 					GamingMachine gamingMachineToUpdate = GamingMachineRepository.Get(serialNumber);
 
-					string oldName = gamingMachineToUpdate.Name;
-					int oldPosition = gamingMachineToUpdate.MachinePosition;
+					if (gamingMachineToUpdate == null)
+					{
+						return HttpNotFound();
+					}
 
-					// Update model - TODO add helper method for this
-					gamingMachineToUpdate.Name = editViewModel.Name;
-					gamingMachineToUpdate.MachinePosition = editViewModel.Position.Value;
+					string oldName = gamingMachineToUpdate.Name;
+
+					// Update model
+					GamingMachineHelper.UpdateGamingMachineFromEditViewModel(gamingMachineToUpdate, editViewModel);
 
 					Result result = GamingMachineRepository.UpdateGamingMachine(gamingMachineToUpdate);
 
