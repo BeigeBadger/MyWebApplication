@@ -216,9 +216,95 @@ namespace MyWebApplication.Controllers
 			return View(editViewModel);
 		}
 
+		/// <summary>
+		/// Navigates to the Delete view and display the details for a <see cref="GamingMachine"/>
+		/// specified the the serial number
+		/// </summary>
+		/// <returns>A new <see cref="GamingMachineDeleteViewModel"/> with the details of the provided <see cref="GamingMachine"/> populated</returns>
+		[HttpGet]
+		public ActionResult Delete(long? serialNumber)
+		{
+			if (serialNumber == null)
+			{
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+			}
+
+			// Get by serial
+			GamingMachine gamingMachine = GamingMachineRepository.Get(serialNumber.Value);
+
+			if (gamingMachine == null)
+			{
+				return HttpNotFound();
+			}
+
+			GamingMachineDeleteViewModel deleteViewModel = GamingMachineHelper.GetDeleteViewModelFromGamingMachineModel(gamingMachine);
+
+			return View(deleteViewModel);
 		}
 
-		// TODO: Delete gaming machine (DELETE)
+		/// <summary>
+		/// Deletes a <see cref="GamingMachine"/>
+		///
+		/// Have to use HttpPost as HttpDelete is not supported
+		/// by ASP.NET MVC5.
+		///
+		/// Also use ActionName to get around the error about
+		/// two methods with the same signature but also still
+		/// call the correct method using aliasing.
+		/// </summary>
+		/// <param name="deleteViewModel">The <see cref="GamingMachineDeleteViewModel"/> to use to update a <see cref="GamingMachine"/></param>
+		/// <returns>A new <see cref="GamingMachineDeleteViewModel"/> with validation errors or a TODO success message</returns>
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeleteMachineConfirmed(long? serialNumber)
+		{
+			GamingMachine gamingMachineToDelete = null;
+			string failureMessage = $"Model validation failed.";
+
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					// Get by serial
+					gamingMachineToDelete = GamingMachineRepository.Get(serialNumber.Value);
+
+					if (gamingMachineToDelete == null)
+					{
+						return HttpNotFound();
+					}
+
+					// Do actual delete
+					Result result = GamingMachineRepository.DeleteGamingMachine(gamingMachineToDelete);
+
+					if (result.ResultCode == ResultTypeEnum.Success)
+					{
+						// Update the list used by the view to include the new entry
+						RestoreDatabaseBackup();
+
+						// Set success message - Used in both Index.cshtml and Delete.cshtml
+						TempData.Add("DeleteResultMessage", $"Successfully deleted {gamingMachineToDelete.Name}!");
+						TempData.Add("DeleteSucceeded", true);
+
+						// Use PRG pattern to prevent resubmit on page refresh
+						return RedirectToAction("Index");
+					}
+
+					failureMessage = $"There was an error deleting the machine: {result.ResultMessage}";
+				}
+				catch (Exception)
+				{
+					failureMessage = "An exception occured while attempting to delete the machine, please reload the page and try again";
+				}
+			}
+
+			// Set failure message - Used in both Index.cshtml and Delete.cshtml
+			TempData.Add("DeleteResultMessage", failureMessage);
+			TempData.Add("DeleteSucceeded", false);
+
+			GamingMachineDeleteViewModel deleteViewModel = GamingMachineHelper.GetDeleteViewModelFromGamingMachineModel(gamingMachineToDelete);
+
+			return View(deleteViewModel);
+		}
 
 		private void SortItems(string sortBy)
 		{

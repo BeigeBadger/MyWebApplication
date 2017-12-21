@@ -2,11 +2,21 @@
 
 @{
 	ViewBag.Title = "Manage Page";
+
+	var feedbackClasses = !TempData.ContainsKey("DeleteSucceeded")
+		? ""
+		: (bool)TempData["DeleteSucceeded"] ? "alert alert-success" : "alert alert-danger";
 }
 
 <div class="jumbotron">
 	<h1>Manage gaming machines</h1>
 	<p class="lead">Perform CRUD operations on gaming machines</p>
+</div>
+
+<div class="@feedbackClasses">
+	<p>
+		@(TempData.ContainsKey("DeleteResultMessage") ? TempData["DeleteResultMessage"].ToString() : "")
+	</p>
 </div>
 
 <!--
@@ -19,7 +29,7 @@
 	@Html.ActionLink("Create New", "Create")
 </p>
 
-<hr/>
+<hr />
 
 @using (Html.BeginForm("Index", "GamingMachines", FormMethod.Get))
 {
