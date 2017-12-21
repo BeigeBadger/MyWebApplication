@@ -109,12 +109,14 @@ namespace MyWebApplication.Repositories
 		private void PerformUpdateOperation(GamingMachine gamingMachine, int index)
 		{
 			PerformDeleteOperation(index);
-			PerformCreateOperation(gamingMachine);
+			// Pass false through because we don't want to update the created timestamp
+			PerformCreateOperation(gamingMachine, false);
 		}
 
-		private void PerformCreateOperation(GamingMachine gamingMachine)
+		private void PerformCreateOperation(GamingMachine gamingMachine, bool isCreateOperation = true)
 		{
-			gamingMachine.CreatedAt = DateTime.Now;
+			if (isCreateOperation)
+				gamingMachine.CreatedAt = DateTime.Now;
 
 			GamingMachineDatabase.Add(gamingMachine);
 		}
