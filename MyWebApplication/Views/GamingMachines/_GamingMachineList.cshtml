@@ -54,10 +54,15 @@
 				<td>
 					@Html.DisplayFor(model => item.IsDeleted)
 				</td>
-				<td>
-					@Html.ActionLink("Edit", "Edit", new { serialNumber = item.SerialNumber }) |
-					@Html.ActionLink("Delete", "Delete", new { serialNumber = item.SerialNumber })
-				</td>
+
+				<!-- Only render action controls if the item is not deleted -->
+				@if (!item.IsDeleted)
+				{
+					<td>
+						@Html.ActionLink("Edit", "Edit", new { serialNumber = item.SerialNumber }) |
+						@Html.ActionLink("Delete", "Delete", new { serialNumber = item.SerialNumber })
+					</td>
+				}
 			</tr>
 		}
 	</tbody>

@@ -94,21 +94,20 @@ namespace MyWebApplication.Repositories
 			if (index == -1)
 				return new Result(ResultTypeEnum.Failure, $"A gaming machine with the serial number '{serialNumber}' could not be found");
 
-			PerformDeleteOperation(index);
+			// Update the deleted flag, the update the backing list
+			gamingMachine.IsDeleted = true;
+
+			PerformUpdateOperation(gamingMachine, index);
 
 			return new Result();
 		}
 
 		#region Private
 
-		private void PerformDeleteOperation(int index)
-		{
-			GamingMachineDatabase.RemoveAt(index);
-		}
-
 		private void PerformUpdateOperation(GamingMachine gamingMachine, int index)
 		{
-			PerformDeleteOperation(index);
+			GamingMachineDatabase.RemoveAt(index);
+
 			// Pass false through because we don't want to update the created timestamp
 			PerformCreateOperation(gamingMachine, false);
 		}
